@@ -1,4 +1,3 @@
-using Pokedex.Controllers;
 using Pokedex.Models;
 
 namespace Pokedex.Services
@@ -8,7 +7,13 @@ namespace Pokedex.Services
         public Pokemon GetPokemon(string pokemonName)
         {
             if (pokemonName == "Bulbasaur")
-                return new Pokemon();
+                return new Pokemon
+                {
+                    Name = "Bulbasaur",
+                    Description = "green and blue",
+                    Habitat = "not rare",
+                    IsLegendary = false,
+                };
             return null;
         }
     }
