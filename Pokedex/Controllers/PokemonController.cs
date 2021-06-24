@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Pokedex.Services;
 
 namespace Pokedex.Controllers
@@ -14,9 +15,9 @@ namespace Pokedex.Controllers
             _pokemonService = pokemonService;
         }
 
-        public ActionResult GetPokemon(string pokemonName)
+        public async Task<ActionResult> GetPokemon(string pokemonName)
         {
-            var pokemon = _pokemonService.GetPokemon(pokemonName);
+            var pokemon = await _pokemonService.GetPokemon(pokemonName);
             if(pokemon == null)
                 return new NotFoundResult();
             return new OkResult();

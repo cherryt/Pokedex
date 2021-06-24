@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
@@ -18,18 +19,18 @@ namespace PokedexTests.ControllersTests
         }
 
         [Test]
-        public void WhenPokemonDoesNotExist_ShouldReturnHttpNotFound()
+        public async Task WhenPokemonDoesNotExist_ShouldReturnHttpNotFound()
         {
-            var result = _controller.GetPokemon("NotAPokemon");
+            var result = await _controller.GetPokemon("NotAPokemon");
 
             result.Should().BeOfType<NotFoundResult>();
         }
 
         [Test]
-        public void WhenPokemonDoesExist_ShouldReturnSuccessfulResponse()
+        public async Task WhenPokemonDoesExist_ShouldReturnSuccessfulResponse()
         {
             const string pokemon = "Bulbasaur";
-            var result = _controller.GetPokemon(pokemon);
+            var result = await _controller.GetPokemon(pokemon);
 
             result.Should().BeOfType<OkResult>();
         }

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using Pokedex.Services;
@@ -7,22 +8,23 @@ namespace PokedexTests.ServicesTests
     public class PokemonServiceTests
     {
         [Test]
-        public void WhenAPokemonDoesNotExist_ShouldNull()
+        public async Task WhenAPokemonDoesNotExist_ShouldNull()
         {
             var pokemonService = new PokemonService();
 
-            var pokemon = pokemonService.GetPokemon("NotAPokemon");
+            var pokemon = await pokemonService.GetPokemon("NotAPokemon");
             pokemon.Should().BeNull();
         }
 
-        [Test]
-        public void WhenAPokemonExists_ShouldReturnAPokemon()
+        [TestCase("bulbasaur")]
+        [TestCase("Bulbasaur")]
+        public async Task WhenAPokemonExists_ShouldReturnAPokemon(string bulbasaur)
         {
             var pokemonService = new PokemonService();
 
-            var pokemon = pokemonService.GetPokemon("Bulbasaur");
+            var pokemon = await pokemonService.GetPokemon(bulbasaur);
             
-            pokemon.Name.Should().Be("Bulbasaur");
+            pokemon.Name.Should().NotBeEmpty();
             pokemon.Description.Should().NotBeEmpty();
             pokemon.Habitat.Should().NotBeEmpty();
             pokemon.IsLegendary.Should().Be(false);
