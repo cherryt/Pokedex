@@ -6,9 +6,33 @@ namespace Pokedex.Controllers
     [Route("[controller]")]
     public class PokemonController
     {
-        public ActionResult GetPokemon(string pokemon)
+        private readonly PokemonService _pokemonService;
+
+        public PokemonController(PokemonService pokemonService)
         {
-            return new NotFoundResult();
+            _pokemonService = pokemonService;
         }
+
+        public ActionResult GetPokemon(string pokemonName)
+        {
+            var pokemon = _pokemonService.GetPokemon(pokemonName);
+            if(pokemon == null)
+                return new NotFoundResult();
+            return new OkResult();
+        }
+    }
+
+    public class PokemonService
+    {
+        public Pokemon GetPokemon(string pokemonName)
+        {
+            if (pokemonName == "Bulbasaur")
+                return new Pokemon();
+            return null;
+        }
+    }
+
+    public class Pokemon
+    {
     }
 }

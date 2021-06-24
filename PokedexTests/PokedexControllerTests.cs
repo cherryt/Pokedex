@@ -7,20 +7,30 @@ namespace PokedexTests
 {
     public class PokedexControllerTests
     {
+        private PokemonController _controller;
+
         [SetUp]
         public void Setup()
         {
+            var pokemonService = new PokemonService();
+            _controller = new PokemonController(pokemonService);
         }
 
         [Test]
         public void WhenPokemonDoesNotExist_ShouldReturnHttpNotFound()
         {
-            var controller = new PokemonController();
-
-            var result = controller.GetPokemon("NotAPokemon");
+            var result = _controller.GetPokemon("NotAPokemon");
 
             result.Should().BeOfType<NotFoundResult>();
+        }
 
+        [Test]
+        public void WhenPokemonDoesExist_ShouldReturnSuccessfulResponse()
+        {
+            const string pokemon = "Bulbasaur";
+            var result = _controller.GetPokemon(pokemon);
+
+            result.Should().BeOfType<OkResult>();
         }
     }
 }
