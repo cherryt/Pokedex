@@ -2,8 +2,9 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using Pokedex.Controllers;
+using Pokedex.Services;
 
-namespace PokedexTests
+namespace PokedexTests.ControllersTests
 {
     public class PokedexControllerTests
     {

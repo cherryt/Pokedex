@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Pokedex.Services;
 
 namespace Pokedex.Controllers
 {
@@ -20,19 +21,5 @@ namespace Pokedex.Controllers
                 return new NotFoundResult();
             return new OkResult();
         }
-    }
-
-    public class PokemonService
-    {
-        public Pokemon GetPokemon(string pokemonName)
-        {
-            if (pokemonName == "Bulbasaur")
-                return new Pokemon();
-            return null;
-        }
-    }
-
-    public class Pokemon
-    {
     }
 }
