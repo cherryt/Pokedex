@@ -21,6 +21,8 @@ namespace Pokedex
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IPokemonService, PokemonService>();
+            services.AddScoped<IPokemonApiService, PokemonApiService>();
+            services.AddScoped<ITranslationApiService, TranslationApiService>();
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Pokedex", Version = "v1"}); });
         }
