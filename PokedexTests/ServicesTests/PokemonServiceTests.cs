@@ -15,7 +15,8 @@ namespace PokedexTests.ServicesTests
         public void SetUp()
         {
             var pokemonApiService = new PokemonApiService();
-            _pokemonService = new PokemonService(pokemonApiService);
+            var fakeTranslationApiService = A.Fake<ITranslationApiService>();
+            _pokemonService = new PokemonService(pokemonApiService, fakeTranslationApiService);
         }
         
         [Test]
@@ -52,6 +53,20 @@ namespace PokedexTests.ServicesTests
             string habitat, TranslationType translationType)
         {
             var fakePokemonApiService = A.Fake<IPokemonApiService>();
+            var pokemonFromApi = SetUpFakePokemonApiService(fakePokemonApiService, habitat);
+            var fakeTranslationApiService = SetUpFakeTranslationApiService(pokemonFromApi);
+
+            var pokemonService = new PokemonService(fakePokemonApiService, fakeTranslationApiService);
+            var translatedPokemon = await pokemonService.GetTranslatedPokemon("bulbasaur");
+
+            translatedPokemon.TranslationType.Should().Be(translationType);
+            translatedPokemon.Pokemon.Should().Be(pokemonFromApi);
+            translatedPokemon.Pokemon.Description.Should().Be("translated description");
+            translatedPokemon.Pokemon.Habitat.Should().Be("translated habitat");
+        }
+
+        private static Pokemon SetUpFakePokemonApiService(IPokemonApiService fakePokemonApiService, string habitat)
+        {
             var pokemonFromApi = new Pokemon
             {
                 Name = "bulbasaur",
@@ -60,12 +75,17 @@ namespace PokedexTests.ServicesTests
                 IsLegendary = false,
             };
             A.CallTo(() => fakePokemonApiService.GetPokemon("bulbasaur")).Returns(pokemonFromApi);
-            
-            var pokemonService = new PokemonService(fakePokemonApiService);
-            var translatedPokemon = await pokemonService.GetTranslatedPokemon("bulbasaur");
+            return pokemonFromApi;
+        }
 
-            translatedPokemon.TranslationType.Should().Be(translationType);
-            translatedPokemon.Pokemon.Should().Be(pokemonFromApi);
+        private static ITranslationApiService SetUpFakeTranslationApiService(Pokemon pokemonFromApi)
+        {
+            var fakeTranslationApiService = A.Fake<ITranslationApiService>();
+            A.CallTo(() => fakeTranslationApiService.Translate(A<TranslationType>._, pokemonFromApi.Description))
+                .Returns("translated description");
+            A.CallTo(() => fakeTranslationApiService.Translate(A<TranslationType>._, pokemonFromApi.Habitat))
+                .Returns("translated habitat");
+            return fakeTranslationApiService;
         }
     }
 }

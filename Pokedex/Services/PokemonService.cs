@@ -7,10 +7,12 @@ namespace Pokedex.Services
     {
         private readonly string _cave = "cave";
         private readonly IPokemonApiService _pokemonApiService;
+        private readonly ITranslationApiService _fakeTranslationApiService;
 
-        public PokemonService(IPokemonApiService pokemonApiService)
+        public PokemonService(IPokemonApiService pokemonApiService, ITranslationApiService fakeTranslationApiService)
         {
             _pokemonApiService = pokemonApiService;
+            _fakeTranslationApiService = fakeTranslationApiService;
         }
 
         public Task<Pokemon> GetPokemon(string pokemonName)
@@ -28,7 +30,7 @@ namespace Pokedex.Services
             }
 
             var translationType = GetTranslationType(pokemon);
-            return new TranslatedPokemon(pokemon, translationType);
+            return await GetTranslatedPokemon(pokemon, translationType);
         }
 
         private TranslationType GetTranslationType(Pokemon pokemon)
@@ -38,9 +40,18 @@ namespace Pokedex.Services
             {
                 return TranslationType.NoTranslation;
             }
+
             var isHabitatCave = pokemonHabitat.ToLower() == _cave;
             return isHabitatCave ? TranslationType.Yoda : TranslationType.Shakespeare;
         }
-    }
 
+        private async Task<TranslatedPokemon> GetTranslatedPokemon(Pokemon pokemon, TranslationType translationType)
+        {
+            var translatedDescription = await _fakeTranslationApiService.Translate(translationType, pokemon.Description);
+            var translatedHabitat = await _fakeTranslationApiService.Translate(translationType, pokemon.Habitat);
+            pokemon.Description = translatedDescription;
+            pokemon.Habitat = translatedHabitat;
+            return new TranslatedPokemon(pokemon, translationType);
+        }
+    }
 }

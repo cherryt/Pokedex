@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
@@ -16,7 +17,8 @@ namespace PokedexTests.ControllersTests
         public void Setup()
         {
             var pokemonApiService = new PokemonApiService();
-            var pokemonService = new PokemonService(pokemonApiService);
+            var fakeTranslationApiService = A.Fake<ITranslationApiService>();
+            var pokemonService = new PokemonService(pokemonApiService, fakeTranslationApiService);
             _controller = new PokemonController(pokemonService);
         }
 
