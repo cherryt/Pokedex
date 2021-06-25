@@ -15,7 +15,8 @@ namespace PokedexTests.ControllersTests
         [SetUp]
         public void Setup()
         {
-            var pokemonService = new PokemonService();
+            var pokemonApiService = new PokemonApiService();
+            var pokemonService = new PokemonService(pokemonApiService);
             _controller = new PokemonController(pokemonService);
         }
 

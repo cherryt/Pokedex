@@ -29,7 +29,7 @@ namespace Pokedex.Controllers
             var pokemon = await _pokemonService.GetTranslatedPokemon(pokemonName);
             if(pokemon == null)
                 return new NotFoundResult();
-            return new OkObjectResult(pokemon);
+            return new OkObjectResult(pokemon.Pokemon);
         }
     }
 }
