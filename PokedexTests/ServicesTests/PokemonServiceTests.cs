@@ -62,7 +62,7 @@ namespace PokedexTests.ServicesTests
             translatedPokemon.TranslationType.Should().Be(translationType);
             translatedPokemon.Pokemon.Should().Be(pokemonFromApi);
             translatedPokemon.Pokemon.Description.Should().Be("translated description");
-            translatedPokemon.Pokemon.Habitat.Should().Be("translated habitat");
+            translatedPokemon.Pokemon.Habitat.Should().Be(habitat);
         }
 
         private static Pokemon SetUpFakePokemonApiService(IPokemonApiService fakePokemonApiService, string habitat)
@@ -83,8 +83,6 @@ namespace PokedexTests.ServicesTests
             var fakeTranslationApiService = A.Fake<ITranslationApiService>();
             A.CallTo(() => fakeTranslationApiService.Translate(A<TranslationType>._, pokemonFromApi.Description))
                 .Returns("translated description");
-            A.CallTo(() => fakeTranslationApiService.Translate(A<TranslationType>._, pokemonFromApi.Habitat))
-                .Returns("translated habitat");
             return fakeTranslationApiService;
         }
     }
