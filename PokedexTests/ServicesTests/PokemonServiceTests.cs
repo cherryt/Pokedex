@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
 using Pokedex.Models;
@@ -53,16 +54,26 @@ namespace PokedexTests.ServicesTests
             pokemon.TranslationType.Should().Be(TranslationType.NoTranslation);
         }
 
-        [TestCase("bulbasaur")]
-        public async Task GivenPokemonHasCaveHabitat_WhenGetTranslatedPokemon_ShouldTranslateToYoda(string bulbasaur)
+        [TestCase("cave", TranslationType.Yoda)]
+        [TestCase("notCave", TranslationType.Shakespeare)]
+        public async Task WhenGetTranslatedPokemon_ShouldTranslate(
+            string habitat, TranslationType translationType)
         {
-            var pokemon = await _pokemonService.GetTranslatedPokemon(bulbasaur);
+            var fakePokemonApiService = A.Fake<IPokemonApiService>();
+            var pokemonFromApi = new Pokemon
+            {
+                Name = "bulbasaur",
+                Description = "bulbasaur description",
+                Habitat = habitat,
+                IsLegendary = false,
+            };
+            A.CallTo(() => fakePokemonApiService.GetPokemon("bulbasaur")).Returns(pokemonFromApi);
+            
+            var pokemonService = new PokemonService(fakePokemonApiService);
+            var translatedPokemon = await pokemonService.GetTranslatedPokemon("bulbasaur");
 
-            pokemon.TranslationType.Should().Be(TranslationType.Yoda);
-            pokemon.Pokemon.Name.Should().Be("yoda name");
-            pokemon.Pokemon.Description.Should().Be("yoda description");
-            pokemon.Pokemon.Habitat.Should().Be("yoda habitat");
-            pokemon.Pokemon.IsLegendary.Should().Be(true);
+            translatedPokemon.TranslationType.Should().Be(translationType);
+            translatedPokemon.Pokemon.Should().Be(pokemonFromApi);
         }
     }
 }

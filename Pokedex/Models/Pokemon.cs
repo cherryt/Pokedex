@@ -23,6 +23,6 @@ namespace Pokedex.Models
     {
         NoTranslation,
         Yoda,
-        /*Shakespeare,*/
+        Shakespeare,
     }
 }

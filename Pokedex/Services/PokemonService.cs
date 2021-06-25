@@ -26,11 +26,12 @@ namespace Pokedex.Services
                 return null;
             }
 
-            return new TranslatedPokemon(pokemon);
-
-            /*var isHabitatCave = IsHabitatCave(pokemon);
-            if(isHabitatCave)*/
-
+            var isHabitatCave = IsHabitatCave(pokemon);
+            var translationType = isHabitatCave ? TranslationType.Yoda : TranslationType.Shakespeare;
+            return new TranslatedPokemon(pokemon)
+            {
+                TranslationType = translationType,
+            };
         }
 
         private bool IsHabitatCave(Pokemon pokemon)
