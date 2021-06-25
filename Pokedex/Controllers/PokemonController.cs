@@ -20,7 +20,16 @@ namespace Pokedex.Controllers
             var pokemon = await _pokemonService.GetPokemon(pokemonName);
             if(pokemon == null)
                 return new NotFoundResult();
-            return new OkResult();
+            return new OkObjectResult(pokemon);
+        }
+
+        [HttpGet("pokemon/translated/{pokemonName}")]
+        public async Task<ActionResult> GetTranslatedPokemon(string pokemonName)
+        {
+            var pokemon = await _pokemonService.GetTranslatedPokemon(pokemonName);
+            if(pokemon == null)
+                return new NotFoundResult();
+            return new OkObjectResult(pokemon);
         }
     }
 }

@@ -4,12 +4,15 @@ using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json.Linq;
+using Pokedex.Extensions;
 using Pokedex.Models;
 
 namespace Pokedex.Services
 {
     public class PokemonService : IPokemonService
     {
+        private string _cave = "cave";
+
         public async Task<Pokemon> GetPokemon(string pokemonName)
         {
             const string url = "https://pokeapi.co/api/v2/pokemon-species/";
@@ -23,6 +26,26 @@ namespace Pokedex.Services
                 Console.WriteLine(e.Message);
             }
             return null;
+        }
+
+        public async Task<TranslatedPokemon> GetTranslatedPokemon(string pokemonName)
+        {
+            var pokemon = await GetPokemon(pokemonName);
+            if (pokemon == null)
+            {
+                return null;
+            }
+
+            return new TranslatedPokemon(pokemon);
+
+            /*var isHabitatCave = IsHabitatCave(pokemon);
+            if(isHabitatCave)*/
+
+        }
+
+        private bool IsHabitatCave(Pokemon pokemon)
+        {
+            return pokemon.Habitat.ToLower() == _cave;
         }
 
         private async Task<Dictionary<string, object>> GetPokemonFromApi(string pokemonName, string url)
@@ -51,7 +74,7 @@ namespace Pokedex.Services
         {
             var flavorTextEntries = (JArray) result["flavor_text_entries"];
             var firstFlavorTextEntry = flavorTextEntries[0];
-            return firstFlavorTextEntry["flavor_text"].ToString();
+            return firstFlavorTextEntry["flavor_text"].ToString().ReplaceSpecialCharactersWithSpace();
         }
 
         private static string GetHabitat(IReadOnlyDictionary<string, object> result)
