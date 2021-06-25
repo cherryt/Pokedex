@@ -5,8 +5,8 @@ namespace Pokedex.Services
 {
     public class PokemonService : IPokemonService
     {
-        private string _cave = "cave";
-        private IPokemonApiService _pokemonApiService;
+        private readonly string _cave = "cave";
+        private readonly IPokemonApiService _pokemonApiService;
 
         public PokemonService(IPokemonApiService pokemonApiService)
         {
@@ -21,17 +21,15 @@ namespace Pokedex.Services
         public async Task<TranslatedPokemon> GetTranslatedPokemon(string pokemonName)
         {
             var pokemon = await GetPokemon(pokemonName);
-            if (pokemon == null)
+            var doesPokemonExist = pokemon == null;
+            if (doesPokemonExist)
             {
                 return null;
             }
 
             var isHabitatCave = IsHabitatCave(pokemon);
             var translationType = isHabitatCave ? TranslationType.Yoda : TranslationType.Shakespeare;
-            return new TranslatedPokemon(pokemon)
-            {
-                TranslationType = translationType,
-            };
+            return new TranslatedPokemon(pokemon, translationType);
         }
 
         private bool IsHabitatCave(Pokemon pokemon)
