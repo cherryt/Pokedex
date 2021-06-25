@@ -8,7 +8,7 @@ using Pokedex.Models;
 
 namespace Pokedex.Services
 {
-    public class PokemonService
+    public class PokemonService : IPokemonService
     {
         public async Task<Pokemon> GetPokemon(string pokemonName)
         {

@@ -5,16 +5,16 @@ using Pokedex.Services;
 namespace Pokedex.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
     public class PokemonController
     {
-        private readonly PokemonService _pokemonService;
+        private readonly IPokemonService _pokemonService;
 
-        public PokemonController(PokemonService pokemonService)
+        public PokemonController(IPokemonService pokemonService)
         {
             _pokemonService = pokemonService;
         }
 
+        [HttpGet("pokemon/{pokemonName}")]
         public async Task<ActionResult> GetPokemon(string pokemonName)
         {
             var pokemon = await _pokemonService.GetPokemon(pokemonName);
