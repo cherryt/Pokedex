@@ -45,17 +45,9 @@ namespace PokedexTests.ServicesTests
             pokemon.Should().BeNull();
         }
 
-        [TestCase("bulbasaur")]
-        public async Task GivenPokemonDoesNotHaveAHabitat_WhenGetTranslatedPokemon_ShouldNotTranslate(string bulbasaur)
-        {
-            var pokemon = await _pokemonService.GetTranslatedPokemon(bulbasaur);
-
-            pokemon.Pokemon.Should().NotBeNull();
-            pokemon.TranslationType.Should().Be(TranslationType.NoTranslation);
-        }
-
         [TestCase("cave", TranslationType.Yoda)]
         [TestCase("notCave", TranslationType.Shakespeare)]
+        [TestCase("", TranslationType.NoTranslation)]
         public async Task WhenGetTranslatedPokemon_ShouldTranslate(
             string habitat, TranslationType translationType)
         {

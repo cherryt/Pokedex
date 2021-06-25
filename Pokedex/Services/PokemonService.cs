@@ -27,14 +27,19 @@ namespace Pokedex.Services
                 return null;
             }
 
-            var isHabitatCave = IsHabitatCave(pokemon);
-            var translationType = isHabitatCave ? TranslationType.Yoda : TranslationType.Shakespeare;
+            var translationType = GetTranslationType(pokemon);
             return new TranslatedPokemon(pokemon, translationType);
         }
 
-        private bool IsHabitatCave(Pokemon pokemon)
+        private TranslationType GetTranslationType(Pokemon pokemon)
         {
-            return pokemon.Habitat.ToLower() == _cave;
+            var pokemonHabitat = pokemon.Habitat;
+            if (string.IsNullOrWhiteSpace(pokemonHabitat))
+            {
+                return TranslationType.NoTranslation;
+            }
+            var isHabitatCave = pokemonHabitat.ToLower() == _cave;
+            return isHabitatCave ? TranslationType.Yoda : TranslationType.Shakespeare;
         }
     }
 
